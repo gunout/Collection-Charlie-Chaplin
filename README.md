@@ -2,7 +2,7 @@
 
  Charlie Chaplin  Collection Complète - Navigateur Firefox Intégré
  
- Ps: Il n y a qu'une videos disponible a la lecture : LES TEMPS MODERNES  ( Documentaire ARTE 2017 ) 
+ Ps: Il n y a qu'une video disponible a la lecture : LES TEMPS MODERNES  ( Documentaire ARTE 2017 ) 
 
  NE PAS RENDRE EN COMPTE LE CODE D'ERREUR : No video with supported format and MIME type found !
  
