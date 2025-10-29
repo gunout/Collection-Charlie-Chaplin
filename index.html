@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charlie Chaplin - Navigateur Intégré</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-pink: #ff10f0;
+            --neon-purple: #9d00ff;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(20, 20, 30, 0.8);
+            --success-color: #00ff88;
+            --warning-color: #ffaa00;
+            --info-color: #00aaff;
+            --firefox-orange: #FF9500;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: white;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 16, 240, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 80% 80%, rgba(157, 0, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 40% 40%, rgba(255, 16, 240, 0.05) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: white;
+            text-shadow: 
+                0 0 10px var(--neon-pink),
+                0 0 20px var(--neon-pink),
+                0 0 30px var(--neon-pink),
+                0 0 40px var(--neon-purple);
+            animation: neon-pulse 2s infinite alternate;
+        }
+
+        @keyframes neon-pulse {
+            from {
+                text-shadow: 
+                    0 0 10px var(--neon-pink),
+                    0 0 20px var(--neon-pink),
+                    0 0 30px var(--neon-pink),
+                    0 0 40px var(--neon-purple);
+            }
+            to {
+                text-shadow: 
+                    0 0 5px var(--neon-pink),
+                    0 0 10px var(--neon-pink),
+                    0 0 15px var(--neon-pink),
+                    0 0 20px var(--neon-purple),
+                    0 0 35px var(--neon-purple);
+            }
+        }
+
+        .subtitle {
+            color: #ccc;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--neon-pink);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .player-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            height: 70vh;
+        }
+
+        .browser-container {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 16, 240, 0.3);
+            border: 1px solid rgba(255, 16, 240, 0.2);
+        }
+
+        .browser-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .browser-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .browser-control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .browser-control.close {
+            background-color: #ff5f57;
+        }
+
+        .browser-control.minimize {
+            background-color: #ffbd2e;
+        }
+
+        .browser-control.maximize {
+            background-color: #28ca42;
+        }
+
+        .browser-url-bar {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background-color: #1a1a1a;
+            border-radius: 20px;
+            padding: 5px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .browser-url-bar i {
+            color: var(--firefox-orange);
+            margin-right: 10px;
+        }
+
+        .browser-url {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .url-go-button {
+            background: transparent;
+            border: none;
+            color: var(--firefox-orange);
+            cursor: pointer;
+            margin-left: 10px;
+            padding: 5px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .url-go-button:hover {
+            background-color: rgba(255, 149, 0, 0.2);
+        }
+
+        .browser-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            overflow: auto;
+        }
+
+        .browser-content i {
+            font-size: 4rem;
+            color: var(--firefox-orange);
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .browser-content h3 {
+            color: var(--firefox-orange);
+            margin-bottom: 15px;
+        }
+
+        .browser-content p {
+            color: #ccc;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+
+        .web-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: white;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .video-player {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 149, 0, 0.5);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .play-button:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .play-button i {
+            font-size: 2.5rem;
+            color: white;
+            margin-left: 5px;
+        }
+
+        .playlist-container {
+            flex: 1;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+            box-shadow: 0 0 15px rgba(255, 16, 240, 0.3);
+            border: 1px solid rgba(255, 16, 240, 0.2);
+        }
+
+        .playlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 16, 240, 0.3);
+        }
+
+        .playlist-title {
+            font-size: 1.5rem;
+            color: var(--neon-pink);
+            text-shadow: 0 0 5px var(--neon-pink);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 16, 240, 0.3);
+            border-radius: 5px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 16, 240, 0.5);
+            border-color: var(--neon-pink);
+        }
+
+        .film-group {
+            margin-bottom: 20px;
+        }
+
+        .film-header {
+            background-color: rgba(255, 16, 240, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .film-header:hover {
+            background-color: rgba(255, 16, 240, 0.3);
+            box-shadow: 0 0 10px rgba(255, 16, 240, 0.5);
+        }
+
+        .film-title {
+            font-weight: bold;
+            color: var(--neon-pink);
+        }
+
+        .film-list {
+            padding-left: 10px;
+        }
+
+        .film-item {
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .film-item:hover {
+            background-color: rgba(255, 16, 240, 0.2);
+            transform: translateX(5px);
+        }
+
+        .film-item.active {
+            background-color: rgba(255, 16, 240, 0.3);
+            border-left: 3px solid var(--neon-pink);
+        }
+
+        .film-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.9rem;
+        }
+
+        .film-type {
+            color: var(--neon-purple);
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+
+        .current-info {
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(255, 16, 240, 0.1);
+            border-radius: 5px;
+        }
+
+        .current-title {
+            font-size: 1.2rem;
+            color: var(--neon-pink);
+            margin-bottom: 5px;
+        }
+
+        .current-year {
+            color: var(--neon-purple);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: rgba(255, 16, 240, 0.2);
+            border: 1px solid var(--neon-pink);
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 16, 240, 0.4);
+            box-shadow: 0 0 10px rgba(255, 16, 240, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: rgba(255, 16, 240, 0.3);
+            border-color: var(--neon-pink);
+        }
+
+        .btn-success {
+            background-color: rgba(0, 255, 136, 0.2);
+            border-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .btn-firefox {
+            background-color: rgba(255, 149, 0, 0.2);
+            border-color: var(--firefox-orange);
+        }
+
+        .btn-firefox:hover {
+            background-color: rgba(255, 149, 0, 0.4);
+            box-shadow: 0 0 10px rgba(255, 149, 0, 0.5);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--neon-pink);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-pink);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-purple);
+        }
+
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .player-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .playlist-container {
+                max-height: 400px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Charlie Chaplin</h1>
+            <p class="subtitle">Collection Complète - Navigateur Firefox Intégré</p>
+        </header>
+        
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalFilms">0</div>
+                <div class="stat-label">Films</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="playableFilms">0</div>
+                <div class="stat-label">Lectures directes</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="currentFilm">-</div>
+                <div class="stat-label">En cours</div>
+            </div>
+        </div>
+
+        <div class="player-container">
+            <div class="browser-container" id="browserContainer">
+                <div class="browser-header">
+                    <div class="browser-controls">
+                        <div class="browser-control close"></div>
+                        <div class="browser-control minimize"></div>
+                        <div class="browser-control maximize"></div>
+                    </div>
+                    <div class="browser-url-bar">
+                        <i class="fab fa-firefox"></i>
+                        <input type="text" class="browser-url" id="browserUrl" placeholder="Entrez une URL ou recherchez...">
+                        <button class="url-go-button" id="urlGoButton">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="browser-content" id="browserContent">
+                    <i class="fab fa-firefox-browser"></i>
+                    <h3>Navigateur Firefox Intégré</h3>
+                    <p>Sélectionnez un film dans la liste ou entrez une URL dans la barre d'adresse.</p>
+                    <p>Les films en format MP4 seront lus directement, les autres formats seront téléchargés.</p>
+                </div>
+            </div>
+
+            <div class="playlist-container">
+                <div class="playlist-header">
+                    <h2 class="playlist-title">
+                        <span id="filmCount">0</span> Films
+                    </h2>
+                </div>
+                <input type="text" class="search-box" id="searchBox" placeholder="Rechercher un film...">
+                <div id="playlistContent">
+                    <div style="text-align: center; padding: 20px;">
+                        <div class="loading"></div>
+                        <p>Chargement des films...</p>
+                    </div>
+                </div>
+                <div class="current-info" id="currentInfo" style="display: none;">
+                    <div class="current-title" id="currentTitle"></div>
+                    <div class="current-year" id="currentYear"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="prevBtn">
+                <i class="fas fa-step-backward"></i> Précédent
+            </button>
+            <button class="btn" id="nextBtn">
+                <i class="fas fa-step-forward"></i> Suivant
+            </button>
+            <button class="btn btn-firefox" id="reloadBtn">
+                <i class="fas fa-redo"></i> Recharger
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Base URL pour les films
+        const baseUrl = "http://188.165.227.112/portail/films/Charlie%20Chaplin%20-%2041%20Films%20et%20un%20Documentaire%20%20-%20DVDRip%20720/";
+        
+        // Liste des films de Charlie Chaplin
+        const chaplinFilms = [
+            { title: "A Dog's Life (1918)", filename: "[VID] A Dog's Life (1918).avi", year: 1918, type: "download" },
+            { title: "A King In New-York (Un Roi A New York)", filename: "[VID] A King In New-York (Un Roi A New York).avi", year: 1957, type: "download" },
+            { title: "A woman of paris", filename: "[VID] A woman of paris.avi", year: 1923, type: "download" },
+            { title: "Caught in a cabaret (Charlot garçon de café)", filename: "[VID] Caught in a cabaret (Charlot garçon de café)(1914).mpg", year: 1914, type: "download" },
+            { title: "City Lights", filename: "[VID] Charlie Chaplin - (1931) City Lights.avi", year: 1931, type: "download" },
+            { title: "Charlot Violoniste", filename: "[VID] Charlie Chaplin - Charlot Violoniste (1916).avi", year: 1916, type: "download" },
+            { title: "Charlot A La Banque", filename: "[VID] Charlot A La Banque (1915).avi", year: 1915, type: "download" },
+            { title: "Charlot Brocanteur (The Pawnshop)", filename: "[VID] Charlot Brocanteur (The Pawnshop) (1916).AVI", year: 1916, type: "download" },
+            { title: "Charlot Cambrioleur", filename: "[VID] Charlot Cambrioleur (1916).avi", year: 1916, type: "download" },
+            { title: "Charlot Débute Au Cinema", filename: "[VID] Charlot Débute Au Cinema.avi", year: 1914, type: "download" },
+            { title: "Charlot Dentiste (Laffing Gas)", filename: "[VID] Charlot Dentiste (Laffing Gas).avi", year: 1914, type: "download" },
+            { title: "Charlot Garçon de Théatre (The Property Man)", filename: "[VID] Charlot Garçon de Théatre (1914) The Property Man.avi", year: 1914, type: "download" },
+            { title: "Charlot Marin", filename: "[VID] Charlot Marin (1915).avi", year: 1915, type: "download" },
+            { title: "Charlot Veut Se Marier (A Jitney Elopement)", filename: "[VID] Charlot Veut Se Marier (A Jitney Elopement)(1915).avi", year: 1915, type: "download" },
+            { title: "Charlot concierge (The new janitor)", filename: "[VID] Charlot concierge (The new janitor) (1914).avi", year: 1914, type: "download" },
+            { title: "Charlot et Mabel en promenade (Getting acquainted)", filename: "[VID] Charlot et Mabel en promenade (Getting acquainted) (1914).mpg", year: 1914, type: "download" },
+            { title: "City Lights", filename: "[VID] City Lights(1931).avi", year: 1931, type: "download" },
+            { title: "Easy Street VOSTFr", filename: "[VID] Easy Street VOSTFr (1917).avi", year: 1917, type: "download" },
+            { title: "His Trysting Places", filename: "[VID] His Trysting Places(1914).mpg", year: 1914, type: "download" },
+            { title: "In the park VOSTFr", filename: "[VID] In the park VOSTFr (1915).avi", year: 1915, type: "download" },
+            { title: "La vie et l'art de Charlie Chaplin", filename: "[VID] La vie et l'art de Charlie Chaplin.avi", year: 2003, type: "download" },
+            { title: "Le Cirque", filename: "[VID] Le Cirque (1928).avi", year: 1928, type: "download" },
+            { title: "Mabel's maried life (charlot et le mannequin)", filename: "[VID] Mabel's maried life(charlot et le mannequin.mpg", year: 1914, type: "download" },
+            { title: "Shoulder arms", filename: "[VID] Shoulder arms (1918).avi", year: 1918, type: "download" },
+            { title: "The Immigrant", filename: "[VID] The-Immigrant (1917).avi", year: 1917, type: "download" },
+            { title: "The Bank", filename: "[VID] The Bank(1915).avi", year: 1915, type: "download" },
+            { title: "The Cure (Charlot Fait Une Cure) VOSTFr", filename: "[VID] The Cure (Charlot Fait Une Cure) VOSTFr.avi", year: 1917, type: "download" },
+            { title: "The Fireman", filename: "[VID] The Fireman 1916.avi", year: 1916, type: "download" },
+            { title: "The Floorwalker VOSTFr (Charlot Chef De Rayon)", filename: "[VID] The Floorwalker VOSTFr (Charlot Chef De Rayon) (1916).avi", year: 1916, type: "download" },
+            { title: "The Gold Rush", filename: "[VID] The Gold Rush (1925).avi", year: 1925, type: "download" },
+            { title: "The Great Train Robbery", filename: "[VID] The Great Train Robbery (1903).mpg", year: 1903, type: "download" },
+            { title: "The Idle Class (Charlot et le masque de fer)", filename: "[VID] The Idle Class (Charlot et le masque de fer).avi", year: 1921, type: "download" },
+            { title: "The Kid (and A Dog's Life)", filename: "[VID] The Kid (and A Dog's Life) - 1921.avi", year: 1921, type: "download" },
+            { title: "The Tramp VOSTFr (Charlot Vagabond)", filename: "[VID] The Tramp VOSTFr (Charlot Vagabond)(1915).avi", year: 1915, type: "download" },
+            { title: "The champion VOSTFr", filename: "[VID] The champion VOSTFr (1915).avi", year: 1915, type: "download" },
+            { title: "Twenty Minutes of Love", filename: "[VID] Twenty Minutes of Love(1914).mpg", year: 1914, type: "download" },
+            { title: "Le gosse (The Kid)", filename: "[VID] le gosse(The Kid)(1921).avi", year: 1921, type: "download" },
+            // Films supplémentaires avec lecture directe
+            { title: "Les Temps Modernes", filename: "Les temps modernes_Chaplin_1936_VOSTFR_Arte_720p_2017.mp4", year: 1936, type: "play", url: "http://188.165.227.112/portail/films/Les%20temps%20modernes_Chaplin_1936_VOSTFR_Arte_720p_2017.mp4" },
+            { title: "Le Dictateur", filename: "charles chaplin - Le Dictateur (1940) (The Great Dictator) 720p x264 AAC MULTI [NOEX].mkv", year: 1940, type: "download", url: "http://188.165.227.112/portail/films/charles%20chaplin%20-%20Le%20Dictateur%20(1940)%20(The%20Great%20Dictator)%20720p%20x264%20AAC%20MULTI%20%5bNOEX%5d.mkv" },
+            // Documentaire avec lecture directe
+            { title: "La vie et l'art de Charlie Chaplin (Documentaire)", filename: "La vie et l'art de Charlie Chaplin.mp4", year: 2003, type: "download", url: "http://188.165.227.112/portail/films/Charlie%20Chaplin%20-%2041%20Films%20et%20un%20Documentaire%20%20-%20DVDRip%20720/[VID]%20La%20vie%20et%20l%27art%20de%20Charlie%20Chaplin.mp4" }
+        ];
+
+        // Variables globales
+        let currentFilmIndex = -1;
+        let playlist = [];
+        let filteredPlaylist = [];
+
+        // Éléments DOM
+        const filmCount = document.getElementById('filmCount');
+        const totalFilms = document.getElementById('totalFilms');
+        const playableFilms = document.getElementById('playableFilms');
+        const currentFilm = document.getElementById('currentFilm');
+        const playlistContent = document.getElementById('playlistContent');
+        const browserUrl = document.getElementById('browserUrl');
+        const browserContent = document.getElementById('browserContent');
+        const currentInfo = document.getElementById('currentInfo');
+        const currentTitle = document.getElementById('currentTitle');
+        const currentYear = document.getElementById('currentYear');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const reloadBtn = document.getElementById('reloadBtn');
+        const searchBox = document.getElementById('searchBox');
+        const urlGoButton = document.getElementById('urlGoButton');
+
+        // Fonction pour préparer la playlist
+        function preparePlaylist() {
+            try {
+                playlist = chaplinFilms.map((film, index) => {
+                    // Générer l'URL complète pour les films sans URL spécifique
+                    if (!film.url) {
+                        film.url = baseUrl + encodeURIComponent(film.filename);
+                    }
+                    // Ajouter un ID unique pour chaque film
+                    film.id = index;
+                    return film;
+                });
+                
+                filteredPlaylist = [...playlist];
+                
+                if (playlist.length === 0) {
+                    console.error('Aucun film trouvé dans la playlist');
+                    return;
+                }
+                
+                // Mettre à jour les statistiques
+                filmCount.textContent = playlist.length;
+                totalFilms.textContent = playlist.length;
+                
+                // Compter le nombre de films jouables
+                const playableCount = playlist.filter(film => film.type === "play").length;
+                playableFilms.textContent = playableCount;
+                
+                console.log(`${playlist.length} films chargés, ${playableCount} en lecture directe`);
+                
+                // Rendre la playlist
+                renderPlaylist();
+                
+                // Ajouter les écouteurs d'événements
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error(`ERREUR: ${error.message}`);
+            }
+        }
+
+        // Fonction pour charger une URL externe dans le navigateur
+        function loadExternalUrl(url) {
+            // Vider le contenu du navigateur
+            browserContent.innerHTML = '';
+            
+            // Créer un iframe pour afficher le contenu web
+            const iframe = document.createElement('iframe');
+            iframe.className = 'web-iframe';
+            iframe.src = url;
+            
+            browserContent.appendChild(iframe);
+            
+            // Masquer les informations du film actuel
+            currentInfo.style.display = 'none';
+            currentFilmIndex = -1;
+            
+            showNotification(`Navigation vers: ${url}`, 'info');
+        }
+
+        // Fonction pour gérer la soumission d'URL dans la barre d'adresse
+        function handleUrlSubmit() {
+            const url = browserUrl.value.trim();
+            
+            if (!url) {
+                // Si la barre est vide, revenir à l'état initial
+                reloadBrowser();
+                return;
+            }
+            
+            // Vérifier si c'est une URL valide
+            let fullUrl;
+            if (url.startsWith('http://') || url.startsWith('https://')) {
+                fullUrl = url;
+            } else {
+                // Ajouter https:// par défaut
+                fullUrl = 'https://' + url;
+            }
+            
+            // Valider l'URL
+            try {
+                new URL(fullUrl);
+                loadExternalUrl(fullUrl);
+            } catch (e) {
+                // Si l'URL n'est pas valide, effectuer une recherche Google
+                const searchUrl = 'https://www.google.com/search?q=' + encodeURIComponent(url);
+                loadExternalUrl(searchUrl);
+                showNotification('Recherche Google pour: ' + url, 'info');
+            }
+        }
+
+        // Configuration des écouteurs d'événements
+        function setupEventListeners() {
+            prevBtn.addEventListener('click', playPrevious);
+            nextBtn.addEventListener('click', playNext);
+            reloadBtn.addEventListener('click', reloadBrowser);
+            searchBox.addEventListener('input', handleSearch);
+            
+            // Nouveaux écouteurs pour la barre d'adresse
+            browserUrl.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleUrlSubmit();
+                }
+            });
+            
+            urlGoButton.addEventListener('click', handleUrlSubmit);
+        }
+
+        // Rendre la playlist
+        function renderPlaylist() {
+            try {
+                // Grouper par décennie pour un meilleur affichage
+                const decades = {};
+                filteredPlaylist.forEach((film) => {
+                    const decade = Math.floor(film.year / 10) * 10;
+                    const decadeKey = `${decade}s`;
+                    
+                    if (!decades[decadeKey]) {
+                        decades[decadeKey] = [];
+                    }
+                    decades[decadeKey].push(film);
+                });
+
+                // Vider le contenu
+                playlistContent.innerHTML = '';
+
+                // Créer les groupes de décennies
+                Object.keys(decades).sort().forEach(decade => {
+                    const filmGroup = document.createElement('div');
+                    filmGroup.className = 'film-group';
+                    
+                    const filmHeader = document.createElement('div');
+                    filmHeader.className = 'film-header';
+                    filmHeader.innerHTML = `
+                        <span class="film-title">${decade} (${decades[decade].length} films)</span>
+                        <i class="fas fa-chevron-down"></i>
+                    `;
+                    
+                    const filmList = document.createElement('div');
+                    filmList.className = 'film-list';
+                    
+                    decades[decade].forEach(film => {
+                        const filmItem = document.createElement('div');
+                        filmItem.className = 'film-item';
+                        filmItem.dataset.id = film.id;
+                        
+                        if (film.id === currentFilmIndex) {
+                            filmItem.classList.add('active');
+                        }
+                        
+                        filmItem.innerHTML = `
+                            <span class="film-type">${film.type === "play" ? "▶" : "📥"}</span>
+                            <span class="film-name">${film.title}</span>
+                        `;
+                        
+                        filmItem.addEventListener('click', () => selectFilm(film.id));
+                        filmList.appendChild(filmItem);
+                    });
+                    
+                    filmHeader.addEventListener('click', () => {
+                        const isVisible = filmList.style.display !== 'none';
+                        filmList.style.display = isVisible ? 'none' : 'block';
+                        const icon = filmHeader.querySelector('i');
+                        icon.className = isVisible ? 'fas fa-chevron-right' : 'fas fa-chevron-down';
+                    });
+                    
+                    // Ouvrir le groupe par défaut
+                    filmList.style.display = 'block';
+                    
+                    filmGroup.appendChild(filmHeader);
+                    filmGroup.appendChild(filmList);
+                    playlistContent.appendChild(filmGroup);
+                });
+                
+                console.log(`Playlist rendue: ${Object.keys(decades).length} décennies`);
+            } catch (error) {
+                console.error(`ERREUR de rendu: ${error.message}`);
+            }
+        }
+
+        // Sélectionner un film
+        function selectFilm(filmId) {
+            const filmIndex = playlist.findIndex(film => film.id === filmId);
+            
+            if (filmIndex === -1) return;
+            
+            currentFilmIndex = filmId;
+            const film = playlist[filmIndex];
+            
+            console.log(`Film sélectionné: ${film.title}`);
+            
+            // Mettre à jour l'interface
+            currentTitle.textContent = film.title;
+            currentYear.textContent = film.year;
+            currentFilm.textContent = film.year;
+            currentInfo.style.display = 'block';
+            
+            // Mettre à jour l'URL dans la barre d'adresse (mais la laisser éditable)
+            browserUrl.value = film.url;
+            
+            // Vider le contenu du navigateur
+            browserContent.innerHTML = '';
+            
+            // Déterminer le type de contenu
+            const ext = film.filename.split('.').pop().toLowerCase();
+            
+            if (film.type === "play" && (ext === 'mp4' || ext === 'webm' || ext === 'ogg')) {
+                // Créer un lecteur vidéo dans le navigateur avec bouton de lecture
+                const videoContainer = document.createElement('div');
+                videoContainer.className = 'video-container';
+                
+                const video = document.createElement('video');
+                video.className = 'video-player';
+                video.poster = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgZmlsbD0iIzJBMkEyQSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNGRjlBNTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5DaGFybGllIENoYXBsaW48L3RleHQ+PHRleHQgeD0iNTAlIiB5PSI1NSUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iI2NjYyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9IjEuNWVtIj5DbGlxdWV6IHN1ciBsZSBib3V0b24gZGUgbGVjdHVyZTwvdGV4dD48L3N2Zz4=';
+                video.controls = true;
+                
+                const source = document.createElement('source');
+                source.src = film.url;
+                
+                if (ext === 'mp4') {
+                    source.type = 'video/mp4';
+                } else if (ext === 'webm') {
+                    source.type = 'video/webm';
+                } else if (ext === 'ogg') {
+                    source.type = 'video/ogg';
+                }
+                
+                video.appendChild(source);
+                
+                // Bouton de lecture personnalisé
+                const playButton = document.createElement('button');
+                playButton.className = 'play-button';
+                playButton.innerHTML = '<i class="fas fa-play"></i>';
+                
+                playButton.addEventListener('click', function() {
+                    video.play().then(() => {
+                        playButton.style.display = 'none';
+                    }).catch(error => {
+                        console.error("Erreur de lecture:", error);
+                        showNotification('Impossible de lire la vidéo. Vérifiez votre connexion.', 'error');
+                    });
+                });
+                
+                // Masquer le bouton quand la vidéo est en lecture
+                video.addEventListener('play', function() {
+                    playButton.style.display = 'none';
+                });
+                
+                // Afficher le bouton quand la vidéo est en pause
+                video.addEventListener('pause', function() {
+                    playButton.style.display = 'flex';
+                });
+                
+                videoContainer.appendChild(video);
+                videoContainer.appendChild(playButton);
+                
+                browserContent.appendChild(videoContainer);
+                
+                // Message d'information
+                const infoMsg = document.createElement('p');
+                infoMsg.textContent = 'Cliquez sur le bouton de lecture pour commencer la vidéo';
+                infoMsg.style.color = '#ccc';
+                infoMsg.style.marginTop = '15px';
+                browserContent.appendChild(infoMsg);
+                
+                showNotification(`"${film.title}" chargé. Cliquez sur le bouton de lecture.`, 'info');
+            } else {
+                // Pour les autres formats, afficher un message de téléchargement
+                browserContent.innerHTML = `
+                    <i class="fas fa-download" style="font-size: 4rem; color: var(--firefox-orange); margin-bottom: 20px;"></i>
+                    <h3 style="color: var(--firefox-orange); margin-bottom: 15px;">Fichier ${ext.toUpperCase()}</h3>
+                    <p style="color: #ccc; margin-bottom: 20px; max-width: 400px;">
+                        Ce format (${ext}) ne peut pas être lu directement dans le navigateur.
+                    </p>
+                    <p style="color: #ccc; margin-bottom: 30px; max-width: 400px;">
+                        Cliquez sur le bouton ci-dessous pour télécharger le fichier.
+                    </p>
+                    <a href="${film.url}" class="btn btn-firefox" download="${film.filename}">
+                        <i class="fas fa-download"></i> Télécharger "${film.title}"
+                    </a>
+                `;
+                
+                // Déclencher le téléchargement automatiquement
+                setTimeout(() => {
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = film.url;
+                    downloadLink.download = film.filename;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                }, 1000);
+                
+                showNotification(`Téléchargement de "${film.title}" démarré`, 'info');
+            }
+            
+            // Mettre à jour l'état actif dans la playlist
+            renderPlaylist();
+        }
+
+        // Recharger le navigateur
+        function reloadBrowser() {
+            if (currentFilmIndex >= 0) {
+                // Recharger le film actuel
+                const film = playlist.find(f => f.id === currentFilmIndex);
+                if (film) {
+                    selectFilm(film.id);
+                }
+            } else if (browserUrl.value && (browserUrl.value.startsWith('http://') || browserUrl.value.startsWith('https://'))) {
+                // Recharger la page web actuelle
+                handleUrlSubmit();
+            } else {
+                // Revenir à l'état initial
+                browserContent.innerHTML = `
+                    <i class="fab fa-firefox-browser"></i>
+                    <h3>Navigateur Firefox Intégré</h3>
+                    <p>Sélectionnez un film dans la liste ou entrez une URL dans la barre d'adresse.</p>
+                    <p>Les films en format MP4 seront lus directement, les autres formats seront téléchargés.</p>
+                `;
+                browserUrl.value = '';
+                currentInfo.style.display = 'none';
+                showNotification('Navigateur réinitialisé', 'info');
+            }
+        }
+
+        // Fonctions de contrôle
+        function playPrevious() {
+            if (currentFilmIndex >= 0) {
+                const currentIndex = playlist.findIndex(f => f.id === currentFilmIndex);
+                if (currentIndex > 0) {
+                    selectFilm(playlist[currentIndex - 1].id);
+                }
+            }
+        }
+
+        function playNext() {
+            if (currentFilmIndex >= 0) {
+                const currentIndex = playlist.findIndex(f => f.id === currentFilmIndex);
+                if (currentIndex < playlist.length - 1) {
+                    selectFilm(playlist[currentIndex + 1].id);
+                }
+            }
+        }
+
+        function handleSearch() {
+            const searchTerm = searchBox.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredPlaylist = [...playlist];
+            } else {
+                filteredPlaylist = playlist.filter(film => 
+                    film.title.toLowerCase().includes(searchTerm) ||
+                    film.year.toString().includes(searchTerm)
+                );
+            }
+            
+            renderPlaylist();
+            console.log(`Recherche: ${searchTerm} (${filteredPlaylist.length} résultats)`);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 5px;
+                color: white;
+                font-weight: bold;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            `;
+            
+            switch(type) {
+                case 'success':
+                    notification.style.backgroundColor = 'rgba(0, 255, 136, 0.9)';
+                    notification.style.border = '1px solid var(--success-color)';
+                    break;
+                case 'error':
+                    notification.style.backgroundColor = 'rgba(255, 0, 0, 0.9)';
+                    notification.style.border = '1px solid #ff0000';
+                    break;
+                case 'info':
+                    notification.style.backgroundColor = 'rgba(255, 16, 240, 0.9)';
+                    notification.style.border = '1px solid var(--neon-pink)';
+                    break;
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Ajouter les animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Lancer l'initialisation quand le DOM est prêt
+        document.addEventListener('DOMContentLoaded', preparePlaylist);
+    </script>
+</body>
+</html>
